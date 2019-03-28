@@ -86,9 +86,18 @@ def draw_skeleton_video(channel, cfg_path):
         drawskeleton(image, preds, thickness=2)
 
         # Display the resulting frame
-        cv2.imshow('frame', image)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+        # cv2.imshow('frame', image)
+        # if cv2.waitKey(1) & 0xFF == ord('q'):
+        #     break
+        fig = plt.figure(figsize=(12, 7))
+
+        ax = fig.add_subplot('121')
+        drawskeleton(image, preds, thickness=2)
+        ax.imshow(image)
+
+        ax = fig.add_subplot('122', projection='3d', aspect=1)
+        show3Dpose(preds, ax, radius=128)
+        ax.view_init(-75, -90)
 
     # When everything done, release the capture
     cap.release()
@@ -99,26 +108,24 @@ def draw_skeleton_image(cfg_path, img_path):
 
     image = cv2.imread(img_path, cv2.IMREAD_COLOR | cv2.IMREAD_IGNORE_ORIENTATION)
     image, preds = pose_inference_on_image(cfg_path, image)
-    # fig = plt.figure(figsize=(12, 7))
-    #
-    # ax = fig.add_subplot('121')
-    # drawskeleton(image, preds, thickness=2)
-    # ax.imshow(image)
-    #
-    # ax = fig.add_subplot('122', projection='3d', aspect=1)
-    # show3Dpose(preds, ax, radius=128)
-    # ax.view_init(-75, -90)
+    fig = plt.figure(figsize=(12, 7))
 
+    ax = fig.add_subplot('121')
     drawskeleton(image, preds, thickness=2)
-    plt.imshow(image)
+    ax.imshow(image)
+
+    ax = fig.add_subplot('122', projection='3d', aspect=1)
+    show3Dpose(preds, ax, radius=128)
+    ax.view_init(-75, -90)
     plt.show()
 
 
 def main():
 
     cfg_file = 'experiments/h36m/valid.yaml'
-    channel = 'data/WIN_20190328_14_00_05_Pro.mp4'
-    img_path = 'data/WIN_20190328_13_51_42_Pro.jpg'
+    # channel = 'data/WIN_20190328_14_00_05_Pro.mp4'
+    channel = 1
+    img_path = 'sample_images/0.jpg'
     # draw_skeleton_video(channel, cfg_file)
     draw_skeleton_image(cfg_file, img_path)
 
